@@ -1,0 +1,51 @@
+version: "1.0"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+  frontend:
+    build: ./frontend
+    ports:
+      - "9080:9080"
+  sqlite:
+    tty: true
+    build: ./db
+    volumes:
+      - ./db:/db
+    ports:
+      - "9900:9900"
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+#   sqlitebrowser:
+#     image: linuxserver/sqlitebrowser
+#     ports:
+#       - "7500:7500"
+#     depends_on:
+#       - sqlite-container
+#     security_opt:
+#       - seccomp:unconfined
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=UTC
+#     volumes:
+#       - ./db:/data/db # Ensure correct volume mapping
+#     restart: unless-stopped
+#     container_name: sqlitebrowser
+#     networks:
+#       - app-network
+
+# networks:
+#   app-network: # Define a common network for communication between containers
+#     driver: bridge
+
+# volumes:
+#   sqlite_data:
+#     external: true
