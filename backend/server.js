@@ -10,8 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// let filepath = "sqlite-container://192.168.65.254/feedbackDB.db";
-let filepath = "http://localhost:9900/feedbackDB.db";
+let filepath = "./db/feedbackDB.db";
 
 const db = new sqlite3.Database(filepath, (error) => {
   if (error) {
@@ -21,7 +20,14 @@ const db = new sqlite3.Database(filepath, (error) => {
 
 db.serialize(() => {
   db.run(
-    "CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY, name TEXT, email TEXT, message TEXT)"
+    "CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY, name TEXT, email TEXT, message TEXT)",
+    function (error) {
+      if (error) {
+        console.error("Error creating table:", error.message);
+      } else {
+        console.log("Table 'feedback' created successfully");
+      }
+    }
   );
 });
 
